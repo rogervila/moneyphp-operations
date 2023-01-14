@@ -3,7 +3,7 @@
 [![Build Status](https://github.com/rogervila/moneyphp-operations/workflows/build/badge.svg)](https://github.com/rogervila/moneyphp-operations/actions)
 [![StyleCI](https://github.styleci.io/repos/588556534/shield?branch=main)](https://github.styleci.io/repos/588556534)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=rogervila_moneyphp-operations&metric=alert_status)](https://sonarcloud.io/dashboard?id=rogervila_moneyphp-operations)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rogervila_moneyphp-operations&metric=coverage)](https://sonarcloud.io/dashboard?id=rogervila_moneyphp-operations)
+<!--[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rogervila_moneyphp-operations&metric=coverage)](https://sonarcloud.io/dashboard?id=rogervila_moneyphp-operations)-->
 
 [![Latest Stable Version](https://poser.pugx.org/rogervila/moneyphp-operations/v/stable)](https://packagist.org/packages/rogervila/moneyphp-operations)
 [![Total Downloads](https://poser.pugx.org/rogervila/moneyphp-operations/downloads)](https://packagist.org/packages/rogervila/moneyphp-operations)
