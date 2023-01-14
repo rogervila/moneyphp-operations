@@ -21,7 +21,7 @@ jobs:
         uses: shivammathur/setup-php@2.23.0
         with:
           php-version: ${{ matrix.php }}
-          extensions: zip, curl, xdebug
+          extensions: zip, curl, xdebug, intl
           coverage: xdebug
 
       - name: Update composer
