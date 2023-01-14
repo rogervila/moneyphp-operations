@@ -130,7 +130,7 @@ class OperationTest extends TestCase
     /**
      * @psalm-return array<array{Money,numeric-string,Money}>
      */
-    protected function percentageIncreaseProvider(): array
+    public function percentageIncreaseProvider(): array
     {
         return [
             [Money::EUR('100'), '20', Money::EUR('120')],
@@ -141,7 +141,7 @@ class OperationTest extends TestCase
     /**
      * @psalm-return array<array{Money,numeric-string,Money}>
      */
-    protected function percentageDecreaseProvider(): array
+    public function percentageDecreaseProvider(): array
     {
         return [
             [Money::EUR('120'), '20', Money::EUR('96')],
@@ -154,7 +154,7 @@ class OperationTest extends TestCase
     /**
      * @psalm-return array<array{Money,Money,numeric-string}>
      */
-    protected function percentageDifferenceProvider(): array
+    public function percentageDifferenceProvider(): array
     {
         return [
             [Money::EUR('100'), Money::EUR('120'), '20.00'],
@@ -166,7 +166,7 @@ class OperationTest extends TestCase
     /**
      * @psalm-return array<array{Money, Money[]}>
      */
-    protected function splitProvider(): array
+    public function splitProvider(): array
     {
         return [
             [Money::EUR('100'), [Money::EUR('25'),Money::EUR('25'),Money::EUR('25'),Money::EUR('25')]],
