@@ -20,7 +20,8 @@ class OperationTest extends TestCase
 
         $this->assertTrue(
             $resultMoney->equals($expectedMoney),
-            sprintf('"%s" does not match expected "%s"',
+            sprintf(
+                '"%s" does not match expected "%s"',
                 $resultMoney->getAmount(),
                 $expectedMoney->getAmount(),
             )
@@ -38,7 +39,8 @@ class OperationTest extends TestCase
 
         $this->assertTrue(
             $resultMoney->equals($expectedMoney),
-            sprintf('"%s" does not match expected "%s"',
+            sprintf(
+                '"%s" does not match expected "%s"',
                 $resultMoney->getAmount(),
                 $expectedMoney->getAmount(),
             )
@@ -62,7 +64,8 @@ class OperationTest extends TestCase
         $this->assertEquals(
             $expectedPercentage,
             $resultPercentage,
-            sprintf('percentage difference between "%s" and "%s" does not match expected "%s"',
+            sprintf(
+                'percentage difference between "%s" and "%s" does not match expected "%s"',
                 $originalMoney->getAmount(),
                 $comparedMoney->getAmount(),
                 $resultPercentage
@@ -75,7 +78,8 @@ class OperationTest extends TestCase
      *
      * @param Money[] $expectedParts
      */
-    public function test_split(Money $originalMoney, array $expectedParts): void {
+    public function test_split(Money $originalMoney, array $expectedParts): void
+    {
         /** @psalm-var int<1,max> $times */
         $times = count($expectedParts);
 
@@ -118,7 +122,8 @@ class OperationTest extends TestCase
      *
      * @param Money[] $expectedParts
      */
-    public function test_assert_split(Money $originalMoney, array $expectedParts): void {
+    public function test_assert_split(Money $originalMoney, array $expectedParts): void
+    {
         $this->assertTrue(Operation::of($originalMoney)->assertSplit($expectedParts));
     }
 

@@ -7,7 +7,6 @@ use Money\Formatter\DecimalMoneyFormatter;
 use Money\Money;
 use MoneyOperation\Exceptions\InvalidOperationException;
 
-
 class Operation
 {
     public function __construct(
@@ -42,7 +41,8 @@ class Operation
         return $this->money->subtract($this->money->multiply($percentage, $roundingMode)->divide(100, $roundingMode));
     }
 
-    public function percentageDifference(Money $money): float {
+    public function percentageDifference(Money $money): float
+    {
         $a = floatval($this->money->getAmount());
         $b = floatval($money->getAmount());
 
@@ -69,9 +69,9 @@ class Operation
 
         while (!$this->assertSplit($parts)) {
             if ($tries === 0) {
-                 throw new InvalidOperationException(
-                     sprintf('Could not split %s value to %d parts', $this->money->getAmount(), $times)
-                 );
+                throw new InvalidOperationException(
+                    sprintf('Could not split %s value to %d parts', $this->money->getAmount(), $times)
+                );
             }
 
             $operationMoney = new Money('1', $part->getCurrency());
