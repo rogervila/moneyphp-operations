@@ -1,7 +1,7 @@
 <p align="center"><img width="200" src="https://i.ibb.co/YpVGRZP/money-management.png" alt="MoneyPHP Operations" /></p>
 
 [![Build Status](https://github.com/rogervila/moneyphp-operations/workflows/build/badge.svg)](https://github.com/rogervila/moneyphp-operations/actions)
-[![StyleCI](https://github.styleci.io/repos/588556534/shield?branch=master)](https://github.styleci.io/repos/588556534)
+[![StyleCI](https://github.styleci.io/repos/588556534/shield?branch=main)](https://github.styleci.io/repos/588556534)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=rogervila_moneyphp-operations&metric=alert_status)](https://sonarcloud.io/dashboard?id=rogervila_moneyphp-operations)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rogervila_moneyphp-operations&metric=coverage)](https://sonarcloud.io/dashboard?id=rogervila_moneyphp-operations)
 
