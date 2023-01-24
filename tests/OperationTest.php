@@ -7,6 +7,7 @@ use MoneyOperation\Exceptions\InvalidOperationException;
 use MoneyOperation\Operation;
 use PHPUnit\Framework\TestCase;
 
+/** @psalm-suppress UnusedClass */
 class OperationTest extends TestCase
 {
     /**
@@ -106,6 +107,31 @@ class OperationTest extends TestCase
 
         /** @phpstan-ignore-next-line */
         Operation::of(Money::EUR('123'))->split(random_int(-1, 0));
+    }
+
+    /**
+     * @dataProvider splitProvider
+     *
+     * @param Money[] $parts
+     */
+    public function test_join(Money $originalMoney, array $parts): void
+    {
+        $this->assertEquals(
+            $originalMoney->getAmount(),
+            $currentAmount = Operation::join($parts)->getAmount(),
+            sprintf(
+                'Amount "%s" does not match expected "%s"',
+                $currentAmount,
+                $originalMoney->getAmount(),
+            )
+        );
+    }
+
+    public function test_join_exception_empty_parts(): void
+    {
+        $this->expectException(InvalidOperationException::class);
+
+        Operation::join([]);
     }
 
     public function test_split_exception_indivisible(): void
