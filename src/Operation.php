@@ -90,7 +90,7 @@ class Operation
      * @param Money[] $parts
      * @throws InvalidOperationException
      */
-    public function join(array $parts): Money
+    public static function join(array $parts): Money
     {
         if (empty($parts)) {
             throw new InvalidOperationException('$parts array cannot be empty');

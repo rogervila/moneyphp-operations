@@ -69,7 +69,7 @@ use Money\Money;
 use MoneyOperation\Operation;
 
 $money = Money::EUR('1000'); // 10€
- 
+
 /**
  * Will try to increase the first part when cannot be split equally
  * Throws \MoneyOperation\Exceptions\InvalidOperationException when cannot be split at all (for very low values mainly)
@@ -84,8 +84,8 @@ use Money\Money;
 use MoneyOperation\Operation;
 
 $parts = [Money::EUR('334'), Money::EUR('333'), Money::EUR('333')];
- 
-$money = Operation::of($money)->join($parts) // 10€
+
+$money = Operation::join($parts) // 10€
 ```
 
 ## Author
