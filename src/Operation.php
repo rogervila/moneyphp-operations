@@ -96,6 +96,8 @@ class Operation
             throw new InvalidOperationException('$parts array cannot be empty');
         }
 
+        $parts = array_values($parts);
+
         $money = $parts[0];
 
         foreach ($parts as $key => $part) {
