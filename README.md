@@ -88,6 +88,17 @@ $parts = [Money::EUR('334'), Money::EUR('333'), Money::EUR('333')];
 $money = Operation::join($parts) // 10€
 ```
 
+### Average
+
+```php
+use Money\Money; 
+use MoneyOperation\Operation;
+
+$parts = [Money::EUR('100'), Money::EUR('200'), Money::EUR('300'), Money::EUR('400')];
+
+$money = Operation::average($parts) // 2,50€
+```
+
 ## Author
 
 Created by [Roger Vilà](https://rogervila.es)
