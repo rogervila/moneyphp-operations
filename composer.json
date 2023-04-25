@@ -18,10 +18,10 @@
         "moneyphp/money": "^4.1"
     },
     "require-dev": {
+        "ext-intl": "*",
         "phpstan/phpstan": "^1.9.14",
         "phpunit/phpunit": "^9.5.28",
-        "vimeo/psalm": "^5.6",
-        "ext-intl": "*"
+        "vimeo/psalm": "^5.6"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

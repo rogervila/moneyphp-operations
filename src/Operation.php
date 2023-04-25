@@ -119,4 +119,13 @@ class Operation
     {
         return $this->join($parts)->equals($this->money);
     }
+
+    /**
+     * @param Money[] $parts
+     * @throws InvalidOperationException
+     */
+    public static function average(array $parts): Money
+    {
+        return self::join($parts)->divide(count($parts));
+    }
 }
