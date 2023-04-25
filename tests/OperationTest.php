@@ -154,9 +154,34 @@ class OperationTest extends TestCase
     }
 
     /**
+     * @dataProvider averageProvider
+     *
+     * @param Money[] $parts
+     */
+    public function test_assert_average(array $parts, Money $expectedMoney): void
+    {
+        $this->assertEquals(
+            $expectedMoney->getAmount(),
+            $currentAmount= Operation::average($parts)->getAmount(),
+            sprintf(
+                'Amount "%s" does not match expected "%s"',
+                $currentAmount,
+                $expectedMoney->getAmount(),
+            )
+        );
+    }
+
+    public function test_average_exception_empty_parts(): void
+    {
+        $this->expectException(InvalidOperationException::class);
+
+        Operation::average([]);
+    }
+
+    /**
      * @psalm-return array<array{Money,numeric-string,Money}>
      */
-    public function percentageIncreaseProvider(): array
+    public static function percentageIncreaseProvider(): array
     {
         return [
             [Money::EUR('100'), '20', Money::EUR('120')],
@@ -167,7 +192,7 @@ class OperationTest extends TestCase
     /**
      * @psalm-return array<array{Money,numeric-string,Money}>
      */
-    public function percentageDecreaseProvider(): array
+    public static function percentageDecreaseProvider(): array
     {
         return [
             [Money::EUR('120'), '20', Money::EUR('96')],
@@ -180,7 +205,7 @@ class OperationTest extends TestCase
     /**
      * @psalm-return array<array{Money,Money,numeric-string}>
      */
-    public function percentageDifferenceProvider(): array
+    public static function percentageDifferenceProvider(): array
     {
         return [
             [Money::EUR('100'), Money::EUR('120'), '20.00'],
@@ -192,7 +217,7 @@ class OperationTest extends TestCase
     /**
      * @psalm-return array<array{Money, Money[]}>
      */
-    public function splitProvider(): array
+    public static function splitProvider(): array
     {
         return [
             [Money::EUR('100'), [Money::EUR('25'),Money::EUR('25'),Money::EUR('25'),Money::EUR('25')]],
@@ -200,6 +225,19 @@ class OperationTest extends TestCase
             [Money::EUR('1000'), [Money::EUR('334'),Money::EUR('333'),Money::EUR('333')]],
             [Money::EUR('290'), [Money::EUR('58'),Money::EUR('58'),Money::EUR('58'),Money::EUR('58'),Money::EUR('58')]],
             [Money::EUR('1234'), [Money::EUR('1234')]],
+        ];
+    }
+
+    /**
+     * @psalm-return array<array{Money[], Money}>
+     */
+    public static function averageProvider(): array
+    {
+        return [
+            [
+                [Money::EUR('100'), Money::EUR('200'), Money::EUR('300'), Money::EUR('400')], Money::EUR('250'),
+                [Money::EUR('288'), Money::EUR('422'), Money::EUR('1714')], Money::EUR('808'),
+            ],
         ];
     }
 }
