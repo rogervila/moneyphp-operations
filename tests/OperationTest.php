@@ -2,7 +2,10 @@
 
 namespace Tests\MoneyOperation;
 
+use Money\Currencies\ISOCurrencies;
+use Money\Formatter\DecimalMoneyFormatter;
 use Money\Money;
+use Money\Parser\DecimalMoneyParser;
 use MoneyOperation\Exceptions\InvalidOperationException;
 use MoneyOperation\Operation;
 use PHPUnit\Framework\TestCase;
@@ -10,6 +13,16 @@ use PHPUnit\Framework\TestCase;
 /** @psalm-suppress UnusedClass */
 class OperationTest extends TestCase
 {
+    public function test_constructors(): void
+    {
+        $amount = random_int(100, 1000);
+
+        $this->assertInstanceOf(Operation::class, $operationA = Operation::of(Money::EUR($amount)));
+        $this->assertInstanceOf(Operation::class, $operationB = Operation::ofValues($amount, 'EUR'));
+
+        $this->assertTrue($operationA->percentageIncrease((string) $amount)->equals($operationB->percentageIncrease((string) $amount)));
+    }
+
     /**
      * @dataProvider percentageIncreaseProvider
      *
@@ -116,12 +129,11 @@ class OperationTest extends TestCase
      */
     public function test_join(Money $originalMoney, array $parts): void
     {
-        $this->assertEquals(
-            $originalMoney->getAmount(),
-            $currentAmount = Operation::join($parts)->getAmount(),
+        $this->assertTrue(
+            $originalMoney->equals($currentMoney = Operation::join($parts)),
             sprintf(
                 'Amount "%s" does not match expected "%s"',
-                $currentAmount,
+                $currentMoney->getAmount(),
                 $originalMoney->getAmount(),
             )
         );
@@ -160,12 +172,36 @@ class OperationTest extends TestCase
      */
     public function test_assert_average(array $parts, Money $expectedMoney): void
     {
-        $this->assertEquals(
-            $expectedMoney->getAmount(),
-            $currentAmount= Operation::average($parts)->getAmount(),
+        $this->assertTrue(
+            $expectedMoney->equals($currentMoney = Operation::average($parts)),
             sprintf(
                 'Amount "%s" does not match expected "%s"',
-                $currentAmount,
+                $currentMoney->getAmount(),
+                $expectedMoney->getAmount(),
+            )
+        );
+    }
+
+    /**
+     * @dataProvider formatterParserProvider
+     */
+    public function test_assert_intl_format_and_parse(Money $expectedMoney, string $expectedFormat, string $locale): void
+    {
+        $this->assertEquals(
+            $expectedFormat,
+            $format = Operation::of($expectedMoney)->format($locale),
+            sprintf(
+                'Format "%s" does not match expected "%s"',
+                $format,
+                $expectedFormat,
+            )
+        );
+
+        $this->assertTrue(
+            $expectedMoney->equals($parsed = Operation::parse($expectedFormat, $locale)),
+            sprintf(
+                'Parsed "%s" does not match expected "%s"',
+                $parsed->getAmount(),
                 $expectedMoney->getAmount(),
             )
         );
@@ -238,6 +274,17 @@ class OperationTest extends TestCase
                 [Money::EUR('100'), Money::EUR('200'), Money::EUR('300'), Money::EUR('400')], Money::EUR('250'),
                 [Money::EUR('288'), Money::EUR('422'), Money::EUR('1714')], Money::EUR('808'),
             ],
+        ];
+    }
+
+    /**
+     * @psalm-return array<array{Money,string}>
+     */
+    public static function formatterParserProvider(): array
+    {
+        return [
+            [Money::USD('100'), '$1.00', 'en_US'],
+            [Money::EUR('288'), '2,88 €', 'es_ES'],
         ];
     }
 }

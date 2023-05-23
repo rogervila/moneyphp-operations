@@ -2,21 +2,40 @@
 
 namespace MoneyOperation;
 
+use Money\Currencies;
 use Money\Currencies\ISOCurrencies;
+use Money\Currency;
 use Money\Formatter\DecimalMoneyFormatter;
+use Money\Formatter\IntlMoneyFormatter;
 use Money\Money;
+use Money\MoneyFormatter;
+use Money\MoneyParser;
+use Money\Parser\IntlMoneyParser;
 use MoneyOperation\Exceptions\InvalidOperationException;
 
 class Operation
 {
     public function __construct(
         protected Money $money,
-    ) {
+    )
+    {
     }
 
     public static function of(Money $money): self
     {
         return new self($money);
+    }
+
+    /**
+     * @psalm-param int|numeric-string $amount
+     * @psalm-param Currency|non-empty-string $currency
+     */
+    public static function ofValues(int|string $amount, Currency|string $currency): self
+    {
+        return new self(new Money(
+            $amount,
+            $currency instanceof Currency ? $currency : new Currency($currency)
+        ));
     }
 
     /**
@@ -127,5 +146,34 @@ class Operation
     public static function average(array $parts): Money
     {
         return self::join($parts)->divide(count($parts));
+    }
+
+    /**
+     * @throws InvalidOperationException
+     */
+    public function format(string $locale = 'en_US', ?Currencies $currencies = null): string
+    {
+        if (!extension_loaded('intl')) {
+            throw new InvalidOperationException('intl extension is not available');
+        }
+
+        $currencies ??= new ISOCurrencies();
+
+        return (new IntlMoneyFormatter(new \NumberFormatter($locale, \NumberFormatter::CURRENCY), $currencies))
+            ->format($this->money);
+    }
+
+    /**
+     * @throws InvalidOperationException
+     */
+    public static function parse(string $value, string $locale = 'en_US', ?Currencies $currencies = null): Money
+    {
+        if (!extension_loaded('intl')) {
+            throw new InvalidOperationException('intl extension is not available');
+        }
+
+        $currencies ??= new ISOCurrencies();
+
+        return (new IntlMoneyParser(new \NumberFormatter($locale, \NumberFormatter::CURRENCY), $currencies))->parse($value);
     }
 }
