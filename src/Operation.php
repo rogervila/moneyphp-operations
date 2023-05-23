@@ -17,8 +17,7 @@ class Operation
 {
     public function __construct(
         protected Money $money,
-    )
-    {
+    ) {
     }
 
     public static function of(Money $money): self
