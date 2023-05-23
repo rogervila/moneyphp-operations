@@ -99,6 +99,32 @@ $parts = [Money::EUR('100'), Money::EUR('200'), Money::EUR('300'), Money::EUR('4
 $money = Operation::average($parts) // 2,50€
 ```
 
+### Format
+
+```php
+use Money\Money; 
+use MoneyOperation\Operation; 
+
+/** 
+ * Uses \Money\Formatter\IntlMoneyFormatter
+ * Throws \MoneyOperation\Exceptions\InvalidOperationException when intl extension is not available
+ */
+$money = Operation::of(Money::USD('100'))->format('en_US') // $1.00 
+```
+
+### Parse
+
+```php
+use Money\Money; 
+use MoneyOperation\Operation; 
+
+/** 
+ * Uses \Money\Parser\IntlMoneyParser
+ * Throws \MoneyOperation\Exceptions\InvalidOperationException when intl extension is not available
+ */
+$money = Operation::parse('$1.00', 'en_US') // Money::USD('100') 
+```
+
 ## Author
 
 Created by [Roger Vilà](https://rogervila.es)
