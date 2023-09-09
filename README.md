@@ -125,6 +125,18 @@ use MoneyOperation\Operation;
 $money = Operation::parse('$1.00', 'en_US') // Money::USD('100') 
 ```
 
+### To Decimal
+
+```php
+use Money\Money; 
+use MoneyOperation\Operation; 
+
+/** 
+ * Uses \Money\Parser\DecimalMoneyFormatter
+ */
+$money = Operation::of(Money::EUR(54321))->toDecimal() // double(543.21) 
+```
+
 ## Author
 
 Created by [Roger Vilà](https://rogervila.es)
