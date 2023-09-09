@@ -210,9 +210,9 @@ class OperationTest extends TestCase
     /**
      * @dataProvider toDecimalMethodProvider
      */
-    public function test_to_integer_method(Money $money, float $result): void
+    public function test_to_decimal_method(Money $money, float $result): void
     {
-        $this->assertTrue(Operation::of($money)->toDecimal() === $result);
+        $this->assertSame($result, Operation::of($money)->toDecimal());
     }
 
     public function test_average_exception_empty_parts(): void

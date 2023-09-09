@@ -11,6 +11,9 @@ use Money\Money;
 use Money\Parser\IntlMoneyParser;
 use MoneyOperation\Exceptions\InvalidOperationException;
 
+/**
+ * @SuppressWarnings("php:S1448")
+ */
 class Operation
 {
     public function __construct(
