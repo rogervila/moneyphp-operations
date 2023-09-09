@@ -11,11 +11,11 @@ use Money\Money;
 use Money\Parser\IntlMoneyParser;
 use MoneyOperation\Exceptions\InvalidOperationException;
 
-/**
- * @SuppressWarnings("php:S1448")
- */
 class Operation
 {
+    /**
+     * @SuppressWarnings("php:S1448")
+     */
     public function __construct(
         protected Money $money,
     ) {
