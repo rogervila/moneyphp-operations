@@ -13,9 +13,6 @@ use MoneyOperation\Exceptions\InvalidOperationException;
 
 class Operation
 {
-    /**
-     * @SuppressWarnings("php:S1448")
-     */
     public function __construct(
         protected Money $money,
     ) {
