@@ -160,7 +160,7 @@ class Operation
             ->format($this->money);
     }
 
-    public function toInteger(?Currencies $currencies = null): float
+    public function toDecimal(?Currencies $currencies = null): float
     {
         $currencies ??= new ISOCurrencies();
 

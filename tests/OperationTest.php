@@ -208,11 +208,11 @@ class OperationTest extends TestCase
     }
 
     /**
-     * @dataProvider toIntegerMethodProvider
+     * @dataProvider toDecimalMethodProvider
      */
     public function test_to_integer_method(Money $money, float $result): void
     {
-        $this->assertTrue(Operation::of($money)->toInteger() === $result);
+        $this->assertTrue(Operation::of($money)->toDecimal() === $result);
     }
 
     public function test_average_exception_empty_parts(): void
@@ -299,7 +299,7 @@ class OperationTest extends TestCase
     /**
      * @psalm-return array<array{Money,float}>
      */
-    public static function toIntegerMethodProvider(): array
+    public static function toDecimalMethodProvider(): array
     {
         return [
             [Money::USD(1234), 12.34],
