@@ -8,8 +8,6 @@ use Money\Currency;
 use Money\Formatter\DecimalMoneyFormatter;
 use Money\Formatter\IntlMoneyFormatter;
 use Money\Money;
-use Money\MoneyFormatter;
-use Money\MoneyParser;
 use Money\Parser\IntlMoneyParser;
 use MoneyOperation\Exceptions\InvalidOperationException;
 
@@ -160,6 +158,14 @@ class Operation
 
         return (new IntlMoneyFormatter(new \NumberFormatter($locale, \NumberFormatter::CURRENCY), $currencies))
             ->format($this->money);
+    }
+
+    public function toInteger(?Currencies $currencies = null): float
+    {
+        $currencies ??= new ISOCurrencies();
+
+        return floatval((new DecimalMoneyFormatter($currencies))
+            ->format($this->money));
     }
 
     /**

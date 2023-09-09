@@ -207,6 +207,14 @@ class OperationTest extends TestCase
         );
     }
 
+    /**
+     * @dataProvider toIntegerMethodProvider
+     */
+    public function test_to_integer_method(Money $money, float $result): void
+    {
+        $this->assertTrue(Operation::of($money)->toInteger() === $result);
+    }
+
     public function test_average_exception_empty_parts(): void
     {
         $this->expectException(InvalidOperationException::class);
@@ -285,6 +293,20 @@ class OperationTest extends TestCase
         return [
             [Money::USD('100'), '$1.00', 'en_US'],
             [Money::EUR('288'), '2,88 €', 'es_ES'],
+        ];
+    }
+
+    /**
+     * @psalm-return array<array{Money,float}>
+     */
+    public static function toIntegerMethodProvider(): array
+    {
+        return [
+            [Money::USD(1234), 12.34],
+            [Money::USD(4321), 43.21],
+            [Money::USD(12345), 123.45],
+            [Money::USD(54321), 543.21],
+            [Money::USD(999999), 9999.99],
         ];
     }
 }
