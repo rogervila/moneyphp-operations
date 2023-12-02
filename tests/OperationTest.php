@@ -2,10 +2,9 @@
 
 namespace Tests\MoneyOperation;
 
-use Money\Currencies\ISOCurrencies;
-use Money\Formatter\DecimalMoneyFormatter;
+use Exception;
+use Money\Currency;
 use Money\Money;
-use Money\Parser\DecimalMoneyParser;
 use MoneyOperation\Exceptions\InvalidOperationException;
 use MoneyOperation\Operation;
 use PHPUnit\Framework\TestCase;
@@ -213,6 +212,27 @@ class OperationTest extends TestCase
     public function test_to_decimal_method(Money $money, float $result): void
     {
         $this->assertSame($result, Operation::of($money)->toDecimal());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_factory_method(): void
+    {
+        $amount = random_int(100, 1000);
+        $expected = Money::EUR($amount);
+
+        $this->assertTrue($expected->equals(
+            Operation::factory($amount, 'EUR')
+        ));
+
+        $this->assertTrue($expected->equals(
+            Operation::factory((string) $amount, 'EUR')
+        ));
+
+        $this->assertTrue($expected->equals(
+            Operation::factory($amount, new Currency('EUR'))
+        ));
     }
 
     public function test_average_exception_empty_parts(): void

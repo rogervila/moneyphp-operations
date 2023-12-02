@@ -29,10 +29,7 @@ class Operation
      */
     public static function ofValues(int|string $amount, Currency|string $currency): self
     {
-        return new self(new Money(
-            $amount,
-            $currency instanceof Currency ? $currency : new Currency($currency)
-        ));
+        return new self(self::factory($amount, $currency));
     }
 
     /**
@@ -180,5 +177,17 @@ class Operation
         $currencies ??= new ISOCurrencies();
 
         return (new IntlMoneyParser(new \NumberFormatter($locale, \NumberFormatter::CURRENCY), $currencies))->parse($value);
+    }
+
+    /**
+     * @psalm-param int|numeric-string $amount
+     * @psalm-param Currency|non-empty-string $currency
+     */
+    public static function factory(int|string $amount, Currency|string $currency): Money
+    {
+        return new Money(
+            $amount,
+            $currency instanceof Currency ? $currency : new Currency($currency)
+        );
     }
 }
