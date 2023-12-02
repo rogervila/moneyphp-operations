@@ -137,6 +137,19 @@ use MoneyOperation\Operation;
 $money = Operation::of(Money::EUR(54321))->toDecimal() // double(543.21) 
 ```
 
+### Factory
+
+```php
+use Money\Money; 
+use MoneyOperation\Operation; 
+
+/**
+ * @param int|numeric-string $amount
+ * @param Currency|non-empty-string $currency
+ */
+$money = Operation::factory(100, 'EUR') // Money::EUR('100') 
+```
+
 ## Author
 
 Created by [Roger Vilà](https://rogervila.es)
