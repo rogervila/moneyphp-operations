@@ -21,7 +21,7 @@
         "ext-intl": "*",
         "phpstan/phpstan": "^1.9.14 || ^2.0.0",
         "phpunit/phpunit": "^9.5.28 || ^10.0.0",
-        "vimeo/psalm": "^5.6"
+        "vimeo/psalm": "^5.6 || ^6.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
