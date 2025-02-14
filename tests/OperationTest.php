@@ -89,11 +89,10 @@ class OperationTest extends TestCase
     /**
      * @dataProvider splitProvider
      *
-     * @param Money[] $expectedParts
+     * @psalm-param non-empty-array<Money> $expectedParts
      */
     public function test_split(Money $originalMoney, array $expectedParts): void
     {
-        /** @psalm-var int<1,max> $times */
         $times = count($expectedParts);
 
         $this->assertCount($times, $result = Operation::of($originalMoney)->split($times));
@@ -124,7 +123,7 @@ class OperationTest extends TestCase
     /**
      * @dataProvider splitProvider
      *
-     * @param Money[] $parts
+     * @psalm-param non-empty-array<Money> $parts
      */
     public function test_join(Money $originalMoney, array $parts): void
     {
@@ -142,7 +141,7 @@ class OperationTest extends TestCase
     {
         $this->expectException(InvalidOperationException::class);
 
-        Operation::join([]);
+        Operation::join([]); // @phpstan-ignore-line
     }
 
     public function test_split_exception_indivisible(): void
@@ -157,7 +156,7 @@ class OperationTest extends TestCase
     /**
      * @dataProvider splitProvider
      *
-     * @param Money[] $expectedParts
+     * @psalm-param non-empty-array<Money> $expectedParts
      */
     public function test_assert_split(Money $originalMoney, array $expectedParts): void
     {
@@ -167,7 +166,7 @@ class OperationTest extends TestCase
     /**
      * @dataProvider averageProvider
      *
-     * @param Money[] $parts
+     * @psalm-param non-empty-array<Money> $parts
      */
     public function test_assert_average(array $parts, Money $expectedMoney): void
     {
@@ -239,7 +238,7 @@ class OperationTest extends TestCase
     {
         $this->expectException(InvalidOperationException::class);
 
-        Operation::average([]);
+        Operation::average([]); // @phpstan-ignore-line
     }
 
     /**
@@ -279,7 +278,7 @@ class OperationTest extends TestCase
     }
 
     /**
-     * @psalm-return array<array{Money, Money[]}>
+     * @psalm-return array<array{Money, non-empty-array<Money>}>
      */
     public static function splitProvider(): array
     {
@@ -293,7 +292,7 @@ class OperationTest extends TestCase
     }
 
     /**
-     * @psalm-return array<array{Money[], Money}>
+     * @psalm-return array<array{non-empty-array<Money>, Money}>
      */
     public static function averageProvider(): array
     {
