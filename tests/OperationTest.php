@@ -127,7 +127,7 @@ class OperationTest extends TestCase
     {
         $this->expectException(InvalidOperationException::class);
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore-next-line @psalm-suppress InvalidArgument */
         Operation::of(Money::EUR('123'))->split(random_int(-1, 0));
     }
 
@@ -328,7 +328,7 @@ class OperationTest extends TestCase
     }
 
     /**
-     * @psalm-return array<array{Money,string}>
+     * @psalm-return array<array{Money,string,string}>
      */
     public static function formatterParserProvider(): array
     {
