@@ -3,7 +3,6 @@
 [![Build Status](https://github.com/rogervila/moneyphp-operations/workflows/build/badge.svg)](https://github.com/rogervila/moneyphp-operations/actions)
 [![StyleCI](https://github.styleci.io/repos/588556534/shield?branch=main)](https://github.styleci.io/repos/588556534)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=rogervila_moneyphp-operations&metric=alert_status)](https://sonarcloud.io/dashboard?id=rogervila_moneyphp-operations)
-<!--[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rogervila_moneyphp-operations&metric=coverage)](https://sonarcloud.io/dashboard?id=rogervila_moneyphp-operations)-->
 
 [![Latest Stable Version](https://poser.pugx.org/rogervila/moneyphp-operations/v/stable)](https://packagist.org/packages/rogervila/moneyphp-operations)
 [![Total Downloads](https://poser.pugx.org/rogervila/moneyphp-operations/downloads)](https://packagist.org/packages/rogervila/moneyphp-operations)
@@ -11,144 +10,162 @@
 
 # MoneyPHP Operations
 
-## About
+MoneyPHP Operations provides a set of powerful helpers to manipulate and format money using [MoneyPHP](https://www.moneyphp.org).
 
-MoneyPHP Operations brings a set of helpers to manipulate money with [MoneyPHP](https://www.moneyphp.org).
+## Installation
 
-## Install
-
-```
+```bash
 composer require rogervila/moneyphp-operations
 ```
 
 ## Usage
 
-> Note: Pull requests with new helpers are welcome!
+### Initialization
 
-### Percentage increase
+You can initialize an `Operation` instance using an existing `Money` object or directly from values.
 
 ```php
-use Money\Money; 
+use Money\Money;
 use MoneyOperation\Operation;
 
-$money = Money::EUR('100'); // 1€
+// From a Money object
+$operation = Operation::of(Money::EUR(1000));
 
-$increasedMoney = Operation::of($money)->percentageIncrease('20') // 1.20€
+// From values (amount and currency)
+$operation = Operation::ofValues(1000, 'EUR');
 ```
 
-### Percentage decrease
+---
+
+### Percentage Operations
+
+#### Increase
+Increase the amount by a given percentage.
 
 ```php
-use Money\Money; 
-use MoneyOperation\Operation;
+$money = Money::EUR('100'); // 1.00€
+$increased = Operation::of($money)->percentageIncrease('20'); // 1.20€
 
+// Custom rounding mode
+$increased = Operation::of($money)->percentageIncrease('20', Money::ROUND_HALF_DOWN);
+```
+
+#### Decrease
+Decrease the amount by a given percentage. Supports both positive and negative percentage strings.
+
+```php
 $money = Money::EUR('288'); // 2.88€
-
-// percentageDecrease accepts positive and negative numeric strings
-$decreasedMoney = Operation::of($money)->percentageDecrease('2.99') // 2.79€
-$decreasedMoney = Operation::of($money)->percentageDecrease('-2.99') // 2.79€
+$decreased = Operation::of($money)->percentageDecrease('2.99'); // 2.79€
 ```
 
-### Percentage difference
+#### Difference
+Calculate the percentage difference between two `Money` objects.
 
 ```php
-use Money\Money; 
-use MoneyOperation\Operation;
+$moneyA = Money::EUR('100');
+$moneyB = Money::EUR('120');
 
-$moneyA = Money::EUR('100'); // 1€
-$moneyB = Money::EUR('120'); // 1.20€
-
-// Returns a float. Use number_format to format the result 
-$percentage = Operation::of($moneyA)->percentageDifference($moneyB) // 20.0
+$diff = Operation::of($moneyA)->percentageDifference($moneyB); // 20.0
 ```
 
-### Split
+---
+
+### Collection Operations
+
+#### Split
+Split a `Money` object into multiple parts. It ensures the sum of parts equals the original amount by adding the remainder to the first part.
 
 ```php
-use Money\Money; 
-use MoneyOperation\Operation;
-
-$money = Money::EUR('1000'); // 10€
-
-/**
- * Will try to increase the first part when cannot be split equally
- * Throws \MoneyOperation\Exceptions\InvalidOperationException when cannot be split at all (for very low values mainly)
- */
-$parts = Operation::of($money)->split(3) // [Money::EUR('334'), Money::EUR('333'), Money::EUR('333')]
+$money = Money::EUR('1000'); // 10.00€
+$parts = Operation::of($money)->split(3); 
+// [Money::EUR('334'), Money::EUR('333'), Money::EUR('333')]
 ```
 
-### Join
+#### Join
+Combine an array of `Money` objects back into a single `Money` object.
 
 ```php
-use Money\Money; 
-use MoneyOperation\Operation;
-
 $parts = [Money::EUR('334'), Money::EUR('333'), Money::EUR('333')];
-
-$money = Operation::join($parts) // 10€
+$sum = Operation::join($parts); // 10.00€
 ```
 
-### Average
+#### Assert Split
+Verify if an array of `Money` objects correctly totals the original instance.
 
 ```php
-use Money\Money; 
-use MoneyOperation\Operation;
+$parts = [Money::EUR('334'), Money::EUR('333'), Money::EUR('333')];
+$isValid = Operation::of(Money::EUR(1000))->assertSplit($parts); // true
+```
 
+#### Average
+Calculate the average value of a collection of `Money` objects.
+
+```php
 $parts = [Money::EUR('100'), Money::EUR('200'), Money::EUR('300'), Money::EUR('400')];
-
-$money = Operation::average($parts) // 2,50€
+$avg = Operation::average($parts); // 2.50€
 ```
 
-### Format
+---
+
+### Formatting and Parsing
+
+#### Formatting
+Format a `Money` object to a localized string. Requires the `intl` extension.
 
 ```php
-use Money\Money; 
-use MoneyOperation\Operation; 
+$money = Money::USD('100');
+$formatted = Operation::of($money)->format('en_US'); // "$1.00"
 
-/** 
- * Uses \Money\Formatter\IntlMoneyFormatter
- * Throws \MoneyOperation\Exceptions\InvalidOperationException when intl extension is not available
- */
-$money = Operation::of(Money::USD('100'))->format('en_US') // $1.00 
+// Custom currencies implementation
+$formatted = Operation::of($money)->format('en_US', new MyCustomCurrencies());
 ```
 
-### Parse
+#### Parsing
+Parse a localized currency string into a `Money` object.
 
 ```php
-use Money\Money; 
-use MoneyOperation\Operation; 
-
-/** 
- * Uses \Money\Parser\IntlMoneyParser
- * Throws \MoneyOperation\Exceptions\InvalidOperationException when intl extension is not available
- */
-$money = Operation::parse('$1.00', 'en_US') // Money::USD('100') 
+$money = Operation::parse('$1.00', 'en_US'); // Money::USD('100')
 ```
 
-### To Decimal
+#### To Decimal
+Convert a `Money` object to a float representation.
 
 ```php
-use Money\Money; 
-use MoneyOperation\Operation; 
-
-/** 
- * Uses \Money\Parser\DecimalMoneyFormatter
- */
-$money = Operation::of(Money::EUR(54321))->toDecimal() // double(543.21) 
+$decimal = Operation::of(Money::EUR(54321))->toDecimal(); // 543.21
 ```
+
+---
 
 ### Factory
 
-```php
-use Money\Money; 
-use MoneyOperation\Operation; 
+Create `Money` instances easily.
 
-/**
- * @param int|numeric-string $amount
- * @param Currency|non-empty-string $currency
- */
-$money = Operation::factory(100, 'EUR') // Money::EUR('100') 
+```php
+$money = Operation::factory(100, 'EUR'); // Money::EUR('100')
+$money = Operation::factory('500', new \Money\Currency('USD')); // Money::USD('500')
 ```
+
+## Rounding Modes
+
+Most operations accept an optional `$roundingMode` parameter. By default, it uses `Money::ROUND_HALF_UP`.
+
+Available modes (from MoneyPHP):
+- `Money::ROUND_HALF_UP`
+- `Money::ROUND_HALF_DOWN`
+- `Money::ROUND_HALF_EVEN`
+- `Money::ROUND_HALF_ODD`
+- `Money::ROUND_UP`
+- `Money::ROUND_DOWN`
+- `Money::ROUND_CEILING`
+- `Money::ROUND_FLOOR`
+
+## Exceptions
+
+Methods may throw `\MoneyOperation\Exceptions\InvalidOperationException` in cases like:
+- Invalid number of parts for `split`.
+- Indivisible amounts.
+- Missing `intl` extension for formatting/parsing.
+- Empty arrays for `join` or `average`.
 
 ## Author
 

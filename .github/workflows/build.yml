@@ -13,16 +13,16 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        php: ['8.3', '8.2', '8.1', '8.0']
+        php: ['8.5', '8.4', '8.3', '8.2', '8.1']
 
     name: PHP ${{ matrix.php }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f
         with:
           php-version: ${{ matrix.php }}
           extensions: zip, curl, xdebug, intl

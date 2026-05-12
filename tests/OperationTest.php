@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 /** @psalm-suppress UnusedClass */
 class OperationTest extends TestCase
 {
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_constructors(): void
     {
         $amount = random_int(100, 1000);
@@ -27,6 +28,8 @@ class OperationTest extends TestCase
      *
      * @psalm-param numeric-string $percentage
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('percentageIncreaseProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_percentage_increase(Money $originalMoney, string $percentage, Money $expectedMoney): void
     {
         $resultMoney = Operation::of($originalMoney)->percentageIncrease($percentage);
@@ -46,6 +49,8 @@ class OperationTest extends TestCase
      *
      * @psalm-param numeric-string $percentage
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('percentageDecreaseProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_percentage_decrease(Money $originalMoney, string $percentage, Money $expectedMoney): void
     {
         $resultMoney = Operation::of($originalMoney)->percentageDecrease($percentage);
@@ -63,6 +68,8 @@ class OperationTest extends TestCase
     /**
      * @dataProvider percentageDifferenceProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('percentageDifferenceProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_percentage_difference(
         Money $originalMoney,
         Money $comparedMoney,
@@ -91,6 +98,8 @@ class OperationTest extends TestCase
      *
      * @psalm-param non-empty-array<Money> $expectedParts
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('splitProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_split(Money $originalMoney, array $expectedParts): void
     {
         $times = count($expectedParts);
@@ -112,11 +121,12 @@ class OperationTest extends TestCase
         }
     }
 
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_split_exception_wrong_times(): void
     {
         $this->expectException(InvalidOperationException::class);
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore-next-line @psalm-suppress InvalidArgument */
         Operation::of(Money::EUR('123'))->split(random_int(-1, 0));
     }
 
@@ -125,6 +135,8 @@ class OperationTest extends TestCase
      *
      * @psalm-param non-empty-array<Money> $parts
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('splitProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_join(Money $originalMoney, array $parts): void
     {
         $this->assertTrue(
@@ -137,6 +149,7 @@ class OperationTest extends TestCase
         );
     }
 
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_join_exception_empty_parts(): void
     {
         $this->expectException(InvalidOperationException::class);
@@ -144,6 +157,7 @@ class OperationTest extends TestCase
         Operation::join([]); // @phpstan-ignore-line
     }
 
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_split_exception_indivisible(): void
     {
         $this->expectException(InvalidOperationException::class);
@@ -158,6 +172,8 @@ class OperationTest extends TestCase
      *
      * @psalm-param non-empty-array<Money> $expectedParts
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('splitProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_assert_split(Money $originalMoney, array $expectedParts): void
     {
         $this->assertTrue(Operation::of($originalMoney)->assertSplit($expectedParts));
@@ -168,6 +184,8 @@ class OperationTest extends TestCase
      *
      * @psalm-param non-empty-array<Money> $parts
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('averageProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_assert_average(array $parts, Money $expectedMoney): void
     {
         $this->assertTrue(
@@ -183,6 +201,8 @@ class OperationTest extends TestCase
     /**
      * @dataProvider formatterParserProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('formatterParserProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_assert_intl_format_and_parse(Money $expectedMoney, string $expectedFormat, string $locale): void
     {
         $this->assertEquals(
@@ -208,6 +228,8 @@ class OperationTest extends TestCase
     /**
      * @dataProvider toDecimalMethodProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('toDecimalMethodProvider')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_to_decimal_method(Money $money, float $result): void
     {
         $this->assertSame($result, Operation::of($money)->toDecimal());
@@ -216,6 +238,7 @@ class OperationTest extends TestCase
     /**
      * @throws Exception
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_factory_method(): void
     {
         $amount = random_int(100, 1000);
@@ -234,6 +257,7 @@ class OperationTest extends TestCase
         ));
     }
 
+    #[\PHPUnit\Framework\Attributes\Test]
     public function test_average_exception_empty_parts(): void
     {
         $this->expectException(InvalidOperationException::class);
@@ -297,15 +321,13 @@ class OperationTest extends TestCase
     public static function averageProvider(): array
     {
         return [
-            [
-                [Money::EUR('100'), Money::EUR('200'), Money::EUR('300'), Money::EUR('400')], Money::EUR('250'),
-                [Money::EUR('288'), Money::EUR('422'), Money::EUR('1714')], Money::EUR('808'),
-            ],
+            [[Money::EUR('100'), Money::EUR('200'), Money::EUR('300'), Money::EUR('400')], Money::EUR('250')],
+            [[Money::EUR('288'), Money::EUR('422'), Money::EUR('1714')], Money::EUR('808')],
         ];
     }
 
     /**
-     * @psalm-return array<array{Money,string}>
+     * @psalm-return array<array{Money,string,string}>
      */
     public static function formatterParserProvider(): array
     {
