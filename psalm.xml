@@ -16,4 +16,8 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+
+    <issueHandlers>
+        <ClassMustBeFinal errorLevel="info" />
+    </issueHandlers>
 </psalm>
