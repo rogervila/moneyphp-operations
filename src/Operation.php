@@ -66,7 +66,7 @@ class Operation
      * @psalm-param int<1,max> $times
      * @psalm-param int<1,8> $roundingMode
      * @psalm-param int<1,max> $tries
-     * @return Money[]
+     * @psalm-return non-empty-array<Money>
      * @throws InvalidOperationException
      */
     public function split(int $times, int $roundingMode = Money::ROUND_HALF_UP, int $tries = 10): array
@@ -77,7 +77,7 @@ class Operation
             throw new InvalidOperationException(sprintf('$times must be >= 1, %d given', $times));
         }
 
-        /** @psalm-var Money[] $parts */
+        /** @psalm-var non-empty-array<Money> $parts */
         $parts = array_fill(0, $times, $part = $this->money->divide($times, $roundingMode));
 
         while (!$this->assertSplit($parts)) {
@@ -100,11 +100,12 @@ class Operation
     }
 
     /**
-     * @param Money[] $parts
+     * @psalm-param non-empty-array<Money> $parts
      * @throws InvalidOperationException
      */
     public static function join(array $parts): Money
     {
+        /** @phpstan-ignore-next-line */
         if (empty($parts)) {
             throw new InvalidOperationException('$parts array cannot be empty');
         }
@@ -125,7 +126,7 @@ class Operation
     }
 
     /**
-     * @param Money[] $parts
+     * @psalm-param non-empty-array<Money> $parts
      * @throws InvalidOperationException
      */
     public function assertSplit(array $parts): bool
@@ -134,7 +135,7 @@ class Operation
     }
 
     /**
-     * @param Money[] $parts
+     * @psalm-param non-empty-array<Money> $parts
      * @throws InvalidOperationException
      */
     public static function average(array $parts): Money
